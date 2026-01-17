@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MatchStats } from '../types';
 import { generateMatchSummary } from '../services/geminiService';
-import { Sparkles, X, Loader2, Share2, Copy } from 'lucide-react';
+import { Sparkles, X, Loader2, Share2, Copy, Terminal } from 'lucide-react';
 
 interface GeminiAnalysisModalProps {
   stats: MatchStats;
@@ -26,68 +26,78 @@ const GeminiAnalysisModal: React.FC<GeminiAnalysisModalProps> = ({ stats, player
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="bg-slate-900 border border-brand-orange/30 rounded-2xl w-full max-w-lg shadow-2xl shadow-brand-orange/10 overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+      <div className="bg-black border border-white/20 w-full max-w-lg shadow-[0_0_50px_rgba(255,255,255,0.1)] relative">
+        {/* Corner Decorations */}
+        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white"></div>
+        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white"></div>
+        <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white"></div>
+        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white"></div>
         
         {/* Header */}
-        <div className="p-6 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-white/5 flex justify-between items-center">
-          <div className="flex items-center gap-2 text-brand-yellow">
-            <Sparkles className="animate-pulse" size={24} />
-            <h2 className="font-display text-3xl font-bold tracking-wide text-white">AI Match Coach</h2>
+        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
+          <div className="flex items-center gap-3">
+            <Terminal className="text-white" size={20} />
+            <h2 className="font-mono text-sm font-bold tracking-widest text-white uppercase">System Analysis // AI Core</h2>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
-            <X size={24} />
+          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+            <X size={20} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-8">
           
-          {/* Stats Summary */}
-          <div className="grid grid-cols-3 gap-2 text-center">
-             <div className="bg-slate-800 p-3 rounded-lg border border-white/5">
-                <div className="text-gray-400 text-xs uppercase font-bold">Kills</div>
-                <div className="text-2xl font-bold text-brand-orange font-display">{stats.kills}</div>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-3 gap-px bg-white/10 border border-white/10">
+             <div className="bg-black p-4 text-center">
+                <div className="text-gray-500 text-[10px] uppercase tracking-widest mb-1">Kills</div>
+                <div className="text-2xl font-display font-bold text-white">{stats.kills}</div>
              </div>
-             <div className="bg-slate-800 p-3 rounded-lg border border-white/5">
-                <div className="text-gray-400 text-xs uppercase font-bold">Damage</div>
-                <div className="text-2xl font-bold text-brand-orange font-display">{stats.damage}</div>
+             <div className="bg-black p-4 text-center">
+                <div className="text-gray-500 text-[10px] uppercase tracking-widest mb-1">Damage</div>
+                <div className="text-2xl font-display font-bold text-white">{stats.damage}</div>
              </div>
-             <div className="bg-slate-800 p-3 rounded-lg border border-white/5">
-                <div className="text-gray-400 text-xs uppercase font-bold">Place</div>
-                <div className="text-2xl font-bold text-white font-display">#{stats.placement}</div>
+             <div className="bg-black p-4 text-center">
+                <div className="text-gray-500 text-[10px] uppercase tracking-widest mb-1">Rank</div>
+                <div className="text-2xl font-display font-bold text-white">#{stats.placement}</div>
              </div>
           </div>
 
           {!hasRun ? (
-            <div className="text-center py-8">
-              <p className="text-gray-300 mb-6">
-                Ready to generate a professional caster-style summary of your performance on <span className="text-brand-yellow font-bold">{stats.map}</span>?
+            <div className="text-center py-4">
+              <p className="text-gray-400 font-mono text-xs mb-8 leading-relaxed">
+                INITIALIZING PERFORMANCE REVIEW PROTOCOL FOR MAP: <span className="text-white">{stats.map.toUpperCase()}</span>.
+                <br/>AWAITING USER CONFIRMATION...
               </p>
               <button
                 onClick={handleRunAnalysis}
                 disabled={loading}
-                className="w-full py-3 bg-gradient-to-r from-brand-orange to-brand-yellow text-brand-dark font-bold font-display text-xl rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
+                className="w-full py-4 bg-white text-black font-display font-bold text-xl tracking-widest hover:bg-gray-200 transition-colors flex items-center justify-center gap-3 uppercase"
               >
-                {loading ? <Loader2 className="animate-spin" /> : <Sparkles size={20} />}
-                {loading ? "Analyzing Gameplay..." : "Generate AI Analysis"}
+                {loading ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
+                {loading ? "Processing..." : "Run Analysis"}
               </button>
             </div>
           ) : (
-            <div className="animate-fade-in">
-              <div className="bg-slate-800/50 p-4 rounded-xl border border-brand-orange/20 relative">
-                <div className="absolute -top-3 left-4 bg-brand-dark px-2 text-brand-orange text-xs font-bold uppercase border border-brand-orange/20 rounded">
-                    Gemini Analysis
+            <div className="animate-in fade-in duration-500">
+              <div className="border border-white/20 p-6 relative bg-white/5 mb-6">
+                 <div className="absolute top-0 left-0 bg-white text-black text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest">
+                    Gemini Output
                 </div>
-                <p className="text-gray-200 leading-relaxed italic">"{analysis}"</p>
+                <p className="text-gray-300 font-mono text-sm leading-relaxed mt-2 typing-effect">
+                    <span className="text-white opacity-50 mr-2">{'>'}</span>
+                    {analysis}
+                    <span className="animate-pulse ml-1">_</span>
+                </p>
               </div>
               
-              <div className="flex gap-3 mt-4">
-                 <button className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors">
-                    <Copy size={16} /> Copy
+              <div className="flex gap-4">
+                 <button className="flex-1 py-3 border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors">
+                    <Copy size={14} /> Copy Data
                  </button>
-                 <button className="flex-1 py-2 bg-[#1DA1F2] hover:bg-[#1a94df] text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors">
-                    <Share2 size={16} /> Tweet
+                 <button className="flex-1 py-3 border border-white/20 hover:border-white text-white text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors">
+                    <Share2 size={14} /> Broadcast
                  </button>
               </div>
             </div>

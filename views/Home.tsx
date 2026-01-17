@@ -1,6 +1,6 @@
 import React from 'react';
 import { MOCK_NEWS } from '../constants';
-import { ArrowRight, Flame } from 'lucide-react';
+import { ArrowRight, Crosshair, ChevronDown } from 'lucide-react';
 import { ViewState } from '../types';
 
 interface HomeProps {
@@ -9,71 +9,105 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   return (
-    <div className="space-y-12 pb-12">
-      {/* Hero Section */}
-      <section className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-        <img 
-          src="https://picsum.photos/1600/900?grayscale" 
-          alt="Hero" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
+    <div className="space-y-32 pb-24">
+      {/* Chapter 1: The Call (Hero) */}
+      <section className="relative h-[85vh] flex flex-col justify-center items-start border-l border-white/20 pl-8 md:pl-16">
+        <div className="absolute top-0 right-0 p-8 opacity-20 hidden md:block">
+           <Crosshair size={120} className="animate-spin-slow text-white" />
+        </div>
         
-        <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full md:w-2/3">
-          <div className="flex items-center gap-2 text-brand-orange mb-4 animate-pulse">
-            <Flame size={24} />
-            <span className="font-bold tracking-widest uppercase">Season 12 Live</span>
+        <div className="space-y-6 max-w-4xl relative z-10">
+          <div className="flex items-center gap-4">
+             <span className="h-[1px] w-12 bg-white"></span>
+             <span className="text-gray-400 uppercase tracking-[0.3em] text-sm">Chapter 01</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-white leading-none mb-6">
-            DOMINATE THE <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-yellow">BATTLEGROUND</span>
+          
+          <h1 className="text-7xl md:text-9xl font-display font-bold text-white leading-[0.85] tracking-tight">
+            FORGED IN <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-transparent">SHADOWS.</span>
           </h1>
-          <p className="text-gray-300 text-lg mb-8 max-w-xl">
-            Join the elite Free Fire community. Organize tournaments, build your dream squad, and analyze your matches with AI.
+          
+          <p className="text-gray-400 text-xl font-light max-w-xl leading-relaxed border-l-2 border-white/10 pl-6">
+            The arena has evolved. Welcome to the monochrome era of competitive Free Fire. 
+            No distractions. Just pure skill, strategy, and glory.
           </p>
-          <button 
-            onClick={() => onNavigate('tournaments')}
-            className="bg-brand-orange text-brand-dark font-display text-2xl px-8 py-3 rounded-none skew-x-[-12deg] hover:bg-white transition-colors"
-          >
-            <div className="skew-x-[12deg]">JOIN TOURNAMENT</div>
-          </button>
+          
+          <div className="pt-8">
+            <button 
+                onClick={() => onNavigate('tournaments')}
+                className="group relative px-10 py-4 bg-transparent border border-white/30 hover:border-white text-white font-display text-2xl uppercase tracking-widest transition-all"
+            >
+                <span className="relative z-10">Enter The Arena</span>
+                <div className="absolute inset-0 bg-white scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 ease-out z-0"></div>
+                <span className="relative z-10 group-hover:text-black transition-colors"></span>
+            </button>
+          </div>
+        </div>
+
+        <div className="absolute bottom-12 left-16 animate-bounce text-gray-600">
+           <ChevronDown size={32} />
         </div>
       </section>
 
-      {/* News Grid */}
-      <section>
-        <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-display font-bold text-white border-l-4 border-brand-orange pl-4">LATEST NEWS</h2>
-            <button className="text-brand-orange flex items-center gap-1 hover:gap-2 transition-all">View All <ArrowRight size={16} /></button>
+      {/* Chapter 2: Intel (News) */}
+      <section className="relative">
+        <div className="flex items-end justify-between mb-12 border-b border-white/10 pb-4">
+            <div>
+                 <div className="flex items-center gap-4 mb-2">
+                    <span className="h-[1px] w-8 bg-gray-600"></span>
+                    <span className="text-gray-500 uppercase tracking-[0.2em] text-xs">Chapter 02</span>
+                </div>
+                <h2 className="text-5xl font-display font-bold text-white tracking-wide">INTEL FEED</h2>
+            </div>
+            <button className="text-white border-b border-white/50 hover:border-white pb-1 font-display text-xl tracking-wider flex items-center gap-2">
+                ARCHIVE <ArrowRight size={16} />
+            </button>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {MOCK_NEWS.map((news) => (
-            <div key={news.id} className="group bg-brand-card rounded-xl overflow-hidden hover:translate-y-[-5px] transition-transform duration-300 border border-white/5 hover:border-brand-orange/50">
-              <div className="h-48 overflow-hidden">
-                <img src={news.imageUrl} alt={news.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10">
+          {MOCK_NEWS.map((news, index) => (
+            <div key={news.id} className={`group bg-black/40 backdrop-blur-sm p-8 border-r border-white/10 hover:bg-white/5 transition-colors duration-500 ${index === 2 ? 'border-r-0' : ''}`}>
+              <div className="mb-6 overflow-hidden h-48 relative grayscale group-hover:grayscale-0 transition-all duration-700">
+                <img src={news.imageUrl} alt={news.title} className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
               </div>
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-3">
-                   <span className="text-xs font-bold text-brand-orange uppercase tracking-wider">{news.category}</span>
-                   <span className="text-xs text-gray-500">{news.date}</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2 leading-tight group-hover:text-brand-yellow transition-colors">{news.title}</h3>
-                <p className="text-gray-400 text-sm line-clamp-2">{news.excerpt}</p>
+              
+              <div className="flex justify-between items-center mb-4">
+                 <span className="text-[10px] font-bold text-white border border-white/30 px-2 py-1 uppercase tracking-widest">{news.category}</span>
+                 <span className="text-[10px] text-gray-500 font-mono">{news.date}</span>
+              </div>
+              
+              <h3 className="text-3xl font-display font-bold text-white mb-4 leading-none group-hover:text-glow transition-all">{news.title}</h3>
+              <p className="text-gray-500 text-sm leading-relaxed font-light">{news.excerpt}</p>
+              
+              <div className="mt-6 pt-6 border-t border-white/5 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowRight className="text-white" />
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* CTA Strip */}
-      <section className="bg-gradient-to-r from-brand-orange to-brand-yellow rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between text-brand-dark shadow-lg shadow-brand-orange/20">
-         <div className="mb-6 md:mb-0">
-            <h2 className="text-4xl font-display font-bold mb-2">CREATE YOUR SQUAD</h2>
-            <p className="font-medium text-lg opacity-90">Find teammates, scrim, and climb the leaderboards together.</p>
+      {/* Chapter 3: Squad (CTA) */}
+      <section className="relative py-24 border-y border-white/10 overflow-hidden">
+         <div className="absolute inset-0 bg-white/5 skew-y-3 scale-110"></div>
+         
+         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
+             <div className="max-w-2xl">
+                <div className="flex items-center gap-4 mb-4">
+                    <span className="h-[1px] w-8 bg-gray-600"></span>
+                    <span className="text-gray-500 uppercase tracking-[0.2em] text-xs">Chapter 03</span>
+                </div>
+                <h2 className="text-6xl font-display font-bold text-white mb-6">ASSEMBLE THE SQUAD</h2>
+                <p className="text-xl text-gray-400 font-light border-l border-white/20 pl-6">
+                    Victory is not achieved alone. Recruit operatives, analyze performance, and dominate the leaderboards.
+                </p>
+             </div>
+             
+             <button onClick={() => onNavigate('teams')} className="h-20 w-20 md:h-32 md:w-32 rounded-full border border-white/30 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-500 group">
+                <span className="font-display text-xl font-bold tracking-widest group-hover:scale-110 transition-transform">GO</span>
+             </button>
          </div>
-         <button onClick={() => onNavigate('teams')} className="bg-brand-dark text-white px-8 py-3 rounded-lg font-bold font-display text-xl hover:bg-white hover:text-brand-dark transition-colors">
-            MANAGE TEAM
-         </button>
       </section>
     </div>
   );

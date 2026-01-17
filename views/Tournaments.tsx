@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import { MOCK_TOURNAMENTS } from '../constants';
 import { Tournament, MatchStats } from '../types';
-import { Trophy, Calendar, Users, ChevronRight, PlayCircle, BarChart2 } from 'lucide-react';
+import { Trophy, Calendar, Users, ChevronRight, BarChart2, Radio } from 'lucide-react';
 import GeminiAnalysisModal from '../components/GeminiAnalysisModal';
 
 const Tournaments: React.FC = () => {
-  const [selectedTournament, setSelectedTournament] = useState<Tournament | null>(null);
-  
-  // State for the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalStats, setModalStats] = useState<MatchStats | null>(null);
 
-  // Mock function to simulate clicking "Analyze" on a specific match result within a tournament
   const handleAnalyzeClick = () => {
-    // In a real app, these stats would come from the match history database
     const sampleStats: MatchStats = {
       kills: 12,
       damage: 4520,
@@ -27,72 +22,81 @@ const Tournaments: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-end">
+    <div className="space-y-12 animate-in slide-in-from-bottom-8 duration-700">
+      <div className="flex flex-col md:flex-row justify-between items-end border-b border-white/10 pb-8">
         <div>
-           <h1 className="text-5xl font-display font-bold text-white mb-2">TOURNAMENTS</h1>
-           <p className="text-gray-400">Compete in verified community cups and official scrims.</p>
+           <h1 className="text-6xl font-display font-bold text-white mb-2 tracking-tight">TOURNAMENTS</h1>
+           <p className="text-gray-400 font-light tracking-wide">Sanctioned events and community scrimmages.</p>
         </div>
-        <div className="flex gap-2">
-            <button className="px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-bold border border-white/10 hover:bg-slate-700">All</button>
-            <button className="px-4 py-2 bg-transparent text-gray-400 rounded-lg text-sm font-bold border border-transparent hover:text-white">Live</button>
-            <button className="px-4 py-2 bg-transparent text-gray-400 rounded-lg text-sm font-bold border border-transparent hover:text-white">Upcoming</button>
+        <div className="flex gap-4 mt-6 md:mt-0">
+            {['ALL', 'LIVE', 'UPCOMING'].map((filter) => (
+                <button key={filter} className="text-xs font-bold tracking-[0.2em] text-gray-500 hover:text-white border-b border-transparent hover:border-white transition-all pb-1">
+                    {filter}
+                </button>
+            ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-8">
         {MOCK_TOURNAMENTS.map((t) => (
-          <div key={t.id} className="bg-brand-card rounded-xl overflow-hidden border border-white/5 hover:border-brand-orange/50 transition-all group">
-            <div className="h-40 relative">
-               <img src={t.bannerUrl} alt={t.title} className="w-full h-full object-cover" />
-               <div className="absolute top-4 right-4 bg-brand-dark/90 px-3 py-1 rounded text-xs font-bold uppercase text-white backdrop-blur-md">
-                 {t.status}
-               </div>
+          <div key={t.id} className="group relative bg-black/40 border border-white/10 hover:border-white/30 transition-all duration-500 overflow-hidden">
+            {/* Background Image Effect */}
+            <div className="absolute inset-0 z-0">
+                <img src={t.bannerUrl} alt="" className="w-full h-full object-cover opacity-20 grayscale group-hover:scale-105 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
             </div>
-            
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                 <h3 className="text-2xl font-display font-bold text-white group-hover:text-brand-orange transition-colors">{t.title}</h3>
-                 <div className="text-brand-yellow font-bold flex items-center gap-1">
-                    <Trophy size={16} /> {t.prizePool}
-                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                 <div className="flex items-center gap-2 text-gray-400 text-sm">
-                    <Calendar size={16} /> {t.date}
-                 </div>
-                 <div className="flex items-center gap-2 text-gray-400 text-sm">
-                    <Users size={16} /> {t.registeredTeams}/{t.maxTeams} Teams
-                 </div>
-              </div>
+            <div className="relative z-10 p-8 flex flex-col md:flex-row justify-between items-stretch">
+                <div className="space-y-6 flex-1">
+                    <div className="flex items-center gap-3">
+                        {t.status === 'live' && (
+                            <span className="flex items-center gap-2 px-2 py-1 bg-white text-black text-[10px] font-bold uppercase tracking-widest">
+                                <Radio size={12} className="animate-pulse" /> Live Now
+                            </span>
+                        )}
+                        {t.status === 'upcoming' && (
+                             <span className="px-2 py-1 border border-white/30 text-white text-[10px] font-bold uppercase tracking-widest">
+                                Upcoming
+                            </span>
+                        )}
+                         <span className="text-gray-500 text-xs font-mono uppercase">{t.date}</span>
+                    </div>
 
-              {/* Bracket / Action Area */}
-              <div className="border-t border-white/10 pt-4">
-                {t.status === 'live' ? (
-                   <div className="bg-slate-800/50 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-2">
-                         <span className="text-xs font-bold text-gray-400 uppercase">Live Match Result</span>
-                         <span className="text-xs text-red-500 font-bold flex items-center gap-1 animate-pulse"><div className="w-2 h-2 rounded-full bg-red-500"></div> LIVE</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm text-white mb-3">
-                         <span>Team Elite</span>
-                         <span className="font-mono text-gray-500">vs</span>
-                         <span>Total Gaming</span>
-                      </div>
-                      <button 
-                        onClick={handleAnalyzeClick}
-                        className="w-full py-2 bg-brand-orange/10 hover:bg-brand-orange/20 text-brand-orange border border-brand-orange/30 rounded flex items-center justify-center gap-2 text-sm font-bold transition-colors"
-                      >
-                         <BarChart2 size={16} /> Analyze Match with AI
-                      </button>
-                   </div>
-                ) : (
-                    <button className="w-full py-3 bg-white/5 hover:bg-white/10 text-white rounded-lg font-bold flex items-center justify-center gap-2 transition-colors">
-                        View Details <ChevronRight size={16} />
-                    </button>
-                )}
-              </div>
+                    <div>
+                        <h3 className="text-4xl font-display font-bold text-white mb-2">{t.title}</h3>
+                        <div className="flex items-center gap-6 text-sm text-gray-400 font-light">
+                            <span className="flex items-center gap-2"><Trophy size={14} /> Prize Pool: <span className="text-white font-bold">{t.prizePool}</span></span>
+                            <span className="flex items-center gap-2"><Users size={14} /> {t.registeredTeams}/{t.maxTeams} Squads</span>
+                        </div>
+                    </div>
+
+                    {/* Live Match Context */}
+                    {t.status === 'live' && (
+                        <div className="bg-white/5 border-l-2 border-white p-4 max-w-md backdrop-blur-sm">
+                            <div className="flex justify-between items-center mb-2 text-xs text-gray-400 uppercase tracking-widest">
+                                <span>Current Match</span>
+                                <span>Semi-Finals</span>
+                            </div>
+                            <div className="flex items-center justify-between font-display text-xl text-white mb-4">
+                                <span>TEAM ELITE</span>
+                                <span className="text-sm font-sans text-gray-600">VS</span>
+                                <span>TOTAL GAMING</span>
+                            </div>
+                            <button 
+                                onClick={handleAnalyzeClick}
+                                className="w-full py-2 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <BarChart2 size={14} /> Analyze Data
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                <div className="hidden md:flex flex-col justify-center border-l border-white/10 pl-8 ml-8">
+                     <button className="group/btn h-16 w-16 border border-white/20 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <ChevronRight size={24} className="group-hover/btn:translate-x-1 transition-transform" />
+                     </button>
+                </div>
             </div>
           </div>
         ))}
